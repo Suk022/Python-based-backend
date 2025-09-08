@@ -161,17 +161,6 @@ curl -X GET "http://localhost:8000/paragraphs/search?word=apple" \
   -H "Authorization: Bearer <your-token>"
 ```
 
-## Configuration
-
-Environment variables:
-
-- `USE_SQLITE=true` - Use SQLite instead of PostgreSQL (dev mode)
-- `POSTGRES_HOST` - PostgreSQL host (default: localhost)
-- `POSTGRES_USER` - PostgreSQL user (default: backend_user)
-- `POSTGRES_PASSWORD` - PostgreSQL password (default: password)
-- `POSTGRES_DB` - PostgreSQL database (default: backend_db)
-- `REDIS_URL` - Redis URL (default: redis://localhost:6379/0)
-- `SECRET_KEY` - JWT secret key
 
 ## Testing
 
