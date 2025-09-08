@@ -51,9 +51,9 @@ A Python-based backend demonstrating modern web API development with user authen
    ```
 
 5. **Access the API:**
-   - **API Documentation**: http://localhost:8000/docs
-   - **Health Check**: http://localhost:8000/health
-   - **Root Endpoint**: http://localhost:8000/
+   - **API Documentation**: `http://localhost:8000/docs`
+   - **Health Check**: `http://localhost:8000/health`
+   - **Root Endpoint**: `http://localhost:8000/`
 
 ## API Endpoints
 
@@ -85,7 +85,7 @@ A Python-based backend demonstrating modern web API development with user authen
    docker-compose -f docker-compose.dev.yml up --build
    ```
 
-2. **Open Swagger UI:** http://localhost:8000/docs
+2. **Open Swagger UI:** `http://localhost:8000/docs`
 
 3. **Test User Registration:**
    - Find `POST /auth/register`
