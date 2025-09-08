@@ -3,14 +3,11 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from app.config import settings
 
-# Create engine based on configuration
-if settings.USE_SQLITE:
-    engine = create_engine(
-        settings.DATABASE_URL,
-        connect_args={"check_same_thread": False}  # SQLite specific
-    )
-else:
-    engine = create_engine(settings.DATABASE_URL)
+# Create SQLite engine
+engine = create_engine(
+    settings.DATABASE_URL,
+    connect_args={"check_same_thread": False}  # SQLite specific
+)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()

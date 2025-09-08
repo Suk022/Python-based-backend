@@ -9,10 +9,6 @@ from app.schemas import ParagraphCreate, ParagraphResponse, ParagraphList, Searc
 from app.indexing import index_paragraphs_sync
 from app.config import settings
 
-# Import Celery task only if not using SQLite
-if not settings.USE_SQLITE:
-    from app.tasks import index_paragraphs as index_paragraphs_task
-
 router = APIRouter(prefix="/paragraphs", tags=["paragraphs"])
 
 @router.post("/", response_model=dict)
@@ -48,18 +44,13 @@ async def create_paragraphs(
     
     paragraph_ids = [str(p.id) for p in created_paragraphs]
     
-    # Trigger indexing based on configuration
-    if settings.USE_SQLITE:
-        # Use FastAPI BackgroundTasks for SQLite mode
-        background_tasks.add_task(
-            index_paragraphs_sync, 
-            db, 
-            str(current_user.id), 
-            paragraph_ids
-        )
-    else:
-        # Use Celery for production mode
-        index_paragraphs_task.delay(str(current_user.id), paragraph_ids)
+    # Trigger background indexing
+    background_tasks.add_task(
+        index_paragraphs_sync, 
+        db, 
+        str(current_user.id), 
+        paragraph_ids
+    )
     
     return {
         "message": f"Created {len(created_paragraphs)} paragraphs",

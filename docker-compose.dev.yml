@@ -1,12 +1,10 @@
 # Development environment configuration
-# Uses SQLite database for lightweight local development
 services:
   web:
     build: .
     ports:
       - "8000:8000"  # Map container port 8000 to host port 8000
     environment:
-      - USE_SQLITE=true  # Enable SQLite mode for development
       - SECRET_KEY=dev-secret-key-change-for-production
     volumes:
       - .:/app  # Mount current directory for hot reload

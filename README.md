@@ -1,54 +1,66 @@
 # Backend Assignment
 
-A production-ready but lightweight backend for paragraph indexing and search, built with FastAPI, SQLAlchemy, and Celery.
+A Python-based backend demonstrating modern web API development with user authentication, text processing, and search functionality. Built using FastAPI, SQLAlchemy, and background task processing to showcase full-stack development skills.
 
 ## Features
 
 - **User Authentication**: JWT-based auth with register/login/logout
 - **Paragraph Management**: Submit multiple paragraphs in a single request
 - **Word Indexing**: Automatic background indexing with word frequency tracking
-- **Search**: Find top 10 paragraphs by word frequency for authenticated users
-- **Dual Mode**: SQLite for development, PostgreSQL + Redis + Celery for production
+- **Smart Search**: Find top 10 paragraphs ranked by word frequency
 - **Containerized**: Docker setup with lightweight images
+- **Interactive Docs**: Auto-generated Swagger UI documentation
+
+## Tech Stack
+
+- **Backend**: FastAPI (Python 3.11+)
+- **Database**: SQLAlchemy ORM with SQLite
+- **Authentication**: JWT tokens with bcrypt password hashing
+- **Background Tasks**: FastAPI BackgroundTasks for word indexing
+- **Testing**: pytest with comprehensive test coverage
+- **Deployment**: Docker, Render-ready configuration
 
 ## Quick Start
 
-### Development Mode (SQLite - No Docker)
+### Prerequisites
+- Python 3.11+
+- pip (or Docker for containerized setup)
 
-```bash
-# Install dependencies
-pip install -r requirements.txt
+### Installation
 
-# Run in development mode
-USE_SQLITE=true uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   cd backend-assignment
+   ```
 
-### Production Mode (Docker)
+2. **Create virtual environment:**
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   ```
 
-```bash
-# Start all services (web + worker + postgres + redis)
-docker-compose up --build
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-# Or use make
-make up
-```
+4. **Run the application:**
+   ```bash
+   uvicorn app.main:app --reload --port 8000
+   ```
 
-### Development Mode (Docker - SQLite only)
-
-```bash
-# Start only web service with SQLite
-docker-compose up web --build
-
-# Or use make
-make dev-up
-```
+5. **Access the API:**
+   - **API Documentation**: http://localhost:8000/docs
+   - **Health Check**: http://localhost:8000/health
+   - **Root Endpoint**: http://localhost:8000/
 
 ## API Endpoints
 
 ### Authentication
 - `POST /auth/register` - Register new user
-- `POST /auth/login` - Login and get JWT tokens
-- `POST /auth/logout` - Logout (invalidate refresh token)
+- `POST /auth/login` - User login (returns JWT token)
+- `POST /auth/logout` - Logout and invalidate refresh token
 
 ### Paragraphs
 - `POST /paragraphs` - Submit multiple paragraphs
@@ -56,18 +68,18 @@ make dev-up
 - `GET /paragraphs/search?word=<word>` - Search paragraphs by word frequency
 
 ### Documentation
-- `GET /docs` - Swagger UI
-- `GET /` - API info
-- `GET /health` - Health check
+- `GET /docs` - Interactive Swagger UI
+- `GET /` - API information
+- `GET /health` - Health check endpoint
 
-## Step-by-Step API Testing Guide
+## Testing Guide
 
 ### Method 1: Using Swagger UI (Recommended)
 
 1. **Start the application:**
    ```bash
    # Using Python directly
-   USE_SQLITE=true uvicorn app.main:app --reload --port 8000
+   uvicorn app.main:app --reload --port 8000
    
    # Using Docker
    docker-compose -f docker-compose.dev.yml up --build
