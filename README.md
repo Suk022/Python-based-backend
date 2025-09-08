@@ -1,4 +1,4 @@
-# Backend Assignment
+# Python Based Backend
 
 A Python-based backend demonstrating modern web API development with user authentication, text processing, and search functionality. Built using FastAPI, SQLAlchemy, and background task processing to showcase full-stack development skills.
 
@@ -30,27 +30,21 @@ A Python-based backend demonstrating modern web API development with user authen
 
 1. **Clone the repository:**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Suk022/Python-based-backend.git
    cd backend-assignment
    ```
 
-2. **Create virtual environment:**
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   ```
-
-3. **Install dependencies:**
+2. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **Run the application:**
+3. **Run the application:**
    ```bash
    uvicorn app.main:app --reload --port 8000
    ```
 
-5. **Access the API:**
+4. **Access the API:**
    - **API Documentation**: `http://localhost:8000/docs`
    - **Health Check**: `http://localhost:8000/health`
    - **Root Endpoint**: `http://localhost:8000/`
@@ -177,7 +171,7 @@ Environment variables:
 - `POSTGRES_PASSWORD` - PostgreSQL password (default: password)
 - `POSTGRES_DB` - PostgreSQL database (default: backend_db)
 - `REDIS_URL` - Redis URL (default: redis://localhost:6379/0)
-- `SECRET_KEY` - JWT secret key (change in production!)
+- `SECRET_KEY` - JWT secret key
 
 ## Testing
 
@@ -253,47 +247,3 @@ docker builder prune
 make clean-all
 ```
 
-## Production Considerations
-
-- Change `SECRET_KEY` environment variable
-- Configure CORS origins appropriately
-- Use Alembic migrations instead of `create_all()` (TODO)
-- Set up proper logging and monitoring
-- Configure PostgreSQL connection pooling
-- Use Redis Sentinel for high availability
-
-## Development vs Production
-
-| Feature | Development (SQLite) | Production (Docker) |
-|---------|---------------------|-------------------|
-| Database | SQLite file | PostgreSQL container |
-| Indexing | Synchronous/BackgroundTasks | Celery + Redis |
-| Setup | Single command | Docker Compose |
-| Dependencies | Python only | Full stack |
-
-## File Structure
-
-```
-├── app/
-│   ├── routers/
-│   │   ├── auth.py          # Authentication endpoints
-│   │   └── paragraphs.py    # Paragraph and search endpoints
-│   ├── auth.py              # Authentication utilities
-│   ├── celery_app.py        # Celery configuration
-│   ├── config.py            # Settings and configuration
-│   ├── database.py          # Database setup
-│   ├── dependencies.py      # FastAPI dependencies
-│   ├── indexing.py          # Word indexing logic
-│   ├── main.py              # FastAPI application
-│   ├── models.py            # SQLAlchemy models
-│   ├── schemas.py           # Pydantic schemas
-│   └── tasks.py             # Celery tasks
-├── tests/
-│   └── test_api.py          # API tests
-├── docker-compose.yml       # Production Docker setup
-├── docker-compose.override.yml  # Development overrides
-├── Dockerfile               # Container definition
-├── Makefile                 # Build and run commands
-├── requirements.txt         # Python dependencies
-└── README.md               # This file
-```
