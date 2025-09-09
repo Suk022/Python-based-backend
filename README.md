@@ -235,4 +235,6 @@ docker builder prune
 # Or use make
 make clean-all
 ```
+### Live Demo  
+The project is deployed on Render and can be accessed via [https://python-based-backend.onrender.com/](https://python-based-backend.onrender.com/), You can test the APIs directly through this live link.
 
