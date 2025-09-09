@@ -215,26 +215,6 @@ Optimized for fast search:
 - `(user_id, word, count)` - Frequency sorting
 - `(paragraph_id)` - Paragraph joins
 
-## Docker Optimization
-
-- Uses `python:3.11-slim` base image
-- Multi-stage builds avoided for simplicity
-- `.dockerignore` excludes unnecessary files
-- `pip install --no-cache-dir` reduces image size
-- Alpine images for PostgreSQL and Redis
-
-### Clean Docker Cache
-
-```bash
-# Remove unused containers, networks, images
-docker system prune -a --volumes
-
-# Remove build cache
-docker builder prune
-
-# Or use make
-make clean-all
-```
 ### Live Demo  
 The project is deployed on Render and can be accessed via [https://python-based-backend.onrender.com/](https://python-based-backend.onrender.com/), You can test the APIs directly through this live link.
 
