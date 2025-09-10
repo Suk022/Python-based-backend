@@ -215,6 +215,7 @@ Optimized for fast search:
 - `(user_id, word, count)` - Frequency sorting
 - `(paragraph_id)` - Paragraph joins
 
-### Live Demo  
+## Live Demo  
+
 The project is deployed on Render and can be accessed via [https://python-based-backend.onrender.com/](https://python-based-backend.onrender.com/), You can test the APIs directly through this live link.
 
