@@ -1,9 +1,20 @@
 # Python Based Backend
+A Python-based REST API backend that demonstrates modern web development practices. It's a paragraph management system with user authentication, text processing, and search functionality. The core features include JWT-based authentication, paragraph submission, automatic word indexing using background tasks, and frequency-based search."
 
-A Python-based backend demonstrating modern web API development with user authentication, text processing, and search functionality. Built using FastAPI, SQLAlchemy, and background task processing to showcase full-stack development skills.
+## High-Level Architecture
+```
+Client (Browser/Postman) 
+    ↓ HTTP Requests
+FastAPI Application
+    ↓ Database Operations
+SQLAlchemy ORM
+    ↓ Data Storage
+SQLite Database
+    ↓ Background Processing
+FastAPI BackgroundTasks (Word Indexing)
+```
 
 ## Features
-
 - **User Authentication**: JWT-based auth with register/login/logout
 - **Paragraph Management**: Submit multiple paragraphs in a single request
 - **Word Indexing**: Automatic background indexing with word frequency tracking
@@ -12,7 +23,6 @@ A Python-based backend demonstrating modern web API development with user authen
 - **Interactive Docs**: Auto-generated Swagger UI documentation
 
 ## Tech Stack
-
 - **Backend**: FastAPI (Python 3.11+)
 - **Database**: SQLAlchemy ORM with SQLite
 - **Authentication**: JWT tokens with bcrypt password hashing
@@ -68,8 +78,7 @@ A Python-based backend demonstrating modern web API development with user authen
 
 ## Testing Guide
 
-### Method 1: Using Swagger UI (Recommended)
-
+### Below are the instructions for testing APIs using different methods:
 1. **Start the application:**
    ```bash
    # Using Python directly
@@ -217,5 +226,5 @@ Optimized for fast search:
 
 ## Live Demo  
 
-The project is deployed on Render and can be accessed via [https://python-based-backend.onrender.com/](https://python-based-backend.onrender.com/), You can test the APIs directly through this live link.
+The project is deployed on Render and can be accessed via [https://python-based-backend.onrender.com/](https://python-based-backend.onrender.com/). Test the APIs directly through the link.
 
