@@ -3,7 +3,7 @@ from collections import Counter
 from typing import List
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from app.models import Paragraph, WordCount, ParagraphWordCount
+from app.core.models import Paragraph, WordCount, ParagraphWordCount
 
 def tokenize_text(text: str) -> List[str]:
     """Tokenize text into words (lowercase, remove punctuation)"""
@@ -11,7 +11,7 @@ def tokenize_text(text: str) -> List[str]:
     words = re.findall(r"[A-Za-z0-9']+", text.lower())
     return words
 
-def index_paragraphs_sync(db: Session, user_id: str, paragraph_ids: List[str]):
+def index_paragraphs_sync(db: Session, user_id: int, paragraph_ids: List[int]):
     """Synchronously index paragraphs for word counts"""
     try:
         # Get paragraphs to index

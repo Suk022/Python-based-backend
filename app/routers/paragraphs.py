@@ -4,9 +4,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import desc
 from app.database import get_db
 from app.dependencies import get_current_user
-from app.models import User, Paragraph, ParagraphWordCount
-from app.schemas import ParagraphCreate, ParagraphResponse, ParagraphList, SearchResponse, SearchResult
-from app.indexing import index_paragraphs_sync
+from app.core.models import User, Paragraph, ParagraphWordCount
+from app.core.schemas import ParagraphCreate, ParagraphResponse, ParagraphList, SearchResponse, SearchResult
+from app.services.indexing import index_paragraphs_sync
 
 router = APIRouter(prefix="/paragraphs", tags=["paragraphs"])
 
@@ -41,13 +41,13 @@ async def create_paragraphs(
     for paragraph in created_paragraphs:
         db.refresh(paragraph)
     
-    paragraph_ids = [str(p.id) for p in created_paragraphs]
+    paragraph_ids = [p.id for p in created_paragraphs]
     
     # Trigger background indexing
     background_tasks.add_task(
         index_paragraphs_sync, 
         db, 
-        str(current_user.id), 
+        current_user.id, 
         paragraph_ids
     )
     

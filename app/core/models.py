@@ -1,45 +1,13 @@
-import uuid
 from datetime import datetime
 from sqlalchemy import Column, String, DateTime, Text, Integer, ForeignKey, Index
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from sqlalchemy.types import TypeDecorator
-from sqlalchemy.dialects.sqlite import TEXT
 from app.database import Base
-
-# SQLite compatible UUID implementation
-class UUID(TypeDecorator):
-    """Platform-independent UUID type.
-    Uses String(36) for SQLite compatibility.
-    """
-    impl = String(36)
-    cache_ok = True
-
-    def process_bind_param(self, value, dialect):
-        if value is None:
-            return None
-        elif isinstance(value, uuid.UUID):
-            return str(value)
-        else:
-            return str(uuid.UUID(value))
-
-    def process_result_value(self, value, dialect):
-        if value is None:
-            return None
-        return uuid.UUID(value)
-
-    def process_result_value(self, value, dialect):
-        if value is None:
-            return value
-        else:
-            if not isinstance(value, uuid.UUID):
-                return uuid.UUID(value)
-            return value
 
 class User(Base):
     __tablename__ = "users"
     
-    id = Column(UUID(), primary_key=True, default=uuid.uuid4)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     email = Column(String(255), unique=True, index=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -52,8 +20,8 @@ class User(Base):
 class RefreshToken(Base):
     __tablename__ = "refresh_tokens"
     
-    id = Column(UUID(), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(), ForeignKey("users.id"), nullable=False)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     token = Column(String(255), unique=True, index=True, nullable=False)
     expires_at = Column(DateTime(timezone=True), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -64,8 +32,8 @@ class RefreshToken(Base):
 class Paragraph(Base):
     __tablename__ = "paragraphs"
     
-    id = Column(UUID(), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(), ForeignKey("users.id"), nullable=False)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     content = Column(Text, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     
@@ -77,8 +45,8 @@ class WordCount(Base):
     """Global word counts per user"""
     __tablename__ = "word_counts"
     
-    id = Column(UUID(), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(), ForeignKey("users.id"), nullable=False)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     word = Column(String(100), nullable=False)
     count = Column(Integer, default=0, nullable=False)
     
@@ -95,9 +63,9 @@ class ParagraphWordCount(Base):
     """Word counts per paragraph per user"""
     __tablename__ = "paragraph_word_counts"
     
-    id = Column(UUID(), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(), ForeignKey("users.id"), nullable=False)
-    paragraph_id = Column(UUID(), ForeignKey("paragraphs.id"), nullable=False)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    paragraph_id = Column(Integer, ForeignKey("paragraphs.id"), nullable=False)
     word = Column(String(100), nullable=False)
     count = Column(Integer, default=0, nullable=False)
     

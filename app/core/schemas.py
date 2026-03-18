@@ -1,7 +1,6 @@
 from typing import List, Optional
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
-import uuid
 
 # Auth schemas
 class UserRegister(BaseModel):
@@ -25,7 +24,7 @@ class UserBase(BaseModel):
     email: str
 
 class User(UserBase):
-    id: uuid.UUID
+    id: int
     created_at: datetime
     
     class Config:
@@ -36,7 +35,7 @@ class ParagraphCreate(BaseModel):
     paragraphs: List[str]
 
 class ParagraphResponse(BaseModel):
-    id: uuid.UUID
+    id: int
     content: str
     created_at: datetime
     
@@ -51,7 +50,7 @@ class ParagraphList(BaseModel):
 
 # Search schemas
 class SearchResult(BaseModel):
-    paragraph_id: uuid.UUID
+    paragraph_id: int
     content: str
     word_count: int
     created_at: datetime

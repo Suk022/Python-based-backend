@@ -1,4 +1,3 @@
-import uuid
 import os
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
@@ -7,7 +6,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
-from app.models import User, RefreshToken
+from app.core.models import User, RefreshToken
 
 
 load_dotenv()
@@ -36,12 +35,13 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     else:
         expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     
-    to_encode.update({"exp": expire, "jti": str(uuid.uuid4())})
+    to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-def create_refresh_token(user_id: str, db: Session) -> str:
+def create_refresh_token(user_id: int, db: Session) -> str:
     """Create and store refresh token"""
+    import uuid
     token = str(uuid.uuid4())
     expires_at = datetime.utcnow() + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
     
@@ -67,7 +67,7 @@ def get_user_by_email(db: Session, email: str) -> Optional[User]:
     """Get user by email"""
     return db.query(User).filter(User.email == email).first()
 
-def get_user_by_id(db: Session, user_id: str) -> Optional[User]:
+def get_user_by_id(db: Session, user_id: int) -> Optional[User]:
     """Get user by ID"""
     return db.query(User).filter(User.id == user_id).first()
 
