@@ -7,7 +7,6 @@ from app.dependencies import get_current_user
 from app.models import User, Paragraph, ParagraphWordCount
 from app.schemas import ParagraphCreate, ParagraphResponse, ParagraphList, SearchResponse, SearchResult
 from app.indexing import index_paragraphs_sync
-from app.config import settings
 
 router = APIRouter(prefix="/paragraphs", tags=["paragraphs"])
 
