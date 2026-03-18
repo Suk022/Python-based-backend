@@ -1,12 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.database import init_db
+from app.core.database import init_db
 from app.routers import auth, paragraphs
 
 # Initialize FastAPI application
 app = FastAPI(
-    title="Backend Assignment",
-    description="A lightweight backend for paragraph indexing and search",
+    title="Text Processing API",
+    description="A FastAPI backend for text processing with user authentication and word search",
     version="1.0.0"
 )
 
@@ -31,7 +31,7 @@ async def startup_event():
 @app.get("/")
 async def root():
     """Root endpoint with API information"""
-    return {"message": "Backend Assignment API", "docs": "/docs"}
+    return {"message": "Text Processing API", "docs": "/docs"}
 
 @app.get("/health")
 async def health_check():
