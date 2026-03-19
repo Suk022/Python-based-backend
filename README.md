@@ -1,6 +1,6 @@
 # Text Processing API
 
-A FastAPI backend for text processing with user authentication, paragraph submission, and efficient word search functionality.
+A production-ready FastAPI backend for text processing with user authentication, paragraph submission, and efficient word search functionality.
 
 ## What This Project Does
 
@@ -12,22 +12,25 @@ A FastAPI backend for text processing with user authentication, paragraph submis
 
 ## Features
 
-- **User Authentication**: Secure JWT-based authentication with refresh tokens
+- **User Authentication**: Secure JWT-based authentication with access and refresh tokens
 - **Text Processing**: Efficient word indexing and frequency analysis
 - **Search Capabilities**: Fast search with relevance ranking by word frequency
-- **Asynchronous Processing**: Background tasks for non-blocking operations
+- **Asynchronous Processing**: Background tasks for non-blocking indexing operations
 - **Containerized**: Ready for Docker deployment
 
 ## System Architecture
 
 ### Tech Stack
 
-- **Backend Framework**: FastAPI (Python 3.11+)
-- **Database**: SQLAlchemy ORM with SQLite
-- **Authentication**: JWT with bcrypt password hashing
-- **Background Processing**: FastAPI BackgroundTasks
-- **API Documentation**: Auto-generated OpenAPI/Swagger UI
-- **Containerization**: Docker
+| Layer | Technology |
+|---|---|
+| Framework | FastAPI (Python 3.11+) |
+| ORM | SQLAlchemy |
+| Database | SQLite (dev) / PostgreSQL (prod) |
+| Auth | JWT + bcrypt password hashing |
+| Background Processing | FastAPI BackgroundTasks |
+| API Docs | Auto-generated OpenAPI / Swagger UI |
+| Containerization | Docker |
 
 ### Database Schema
 
@@ -75,6 +78,34 @@ erDiagram
     }
 ```
 
+## Project Structure
+
+```
+Text Processing API/
+├── app/
+│   ├── core/
+│   │   ├── database.py        # SQLAlchemy engine, session, Base, init_db
+│   │   ├── models.py          # ORM models: User, Paragraph, ParagraphWordCount
+│   │   └── schemas.py         # Pydantic request/response schemas
+│   ├── routers/
+│   │   ├── auth.py            # Register, login endpoints
+│   │   └── paragraphs.py      # Submit, list, search endpoints
+│   ├── services/
+│   │   ├── auth.py            # Password hashing, JWT token logic, create_user
+│   │   └── indexing.py        # Background word-count indexing logic
+│   ├── utils/
+│   │   └── dependencies.py    # get_current_user dependency (JWT validation)
+│   ├── __init__.py
+│   └── main.py                # FastAPI app entry point, router registration
+├── tests/
+├── .env.example
+├── .gitignore
+├── database.db                # SQLite database (local dev only, not committed)
+├── Dockerfile
+├── requirements.txt
+└── README.md
+```
+
 ## Quick Start
 
 ### Prerequisites
@@ -83,38 +114,48 @@ erDiagram
 
 ### Installation
 
-1. **Clone repository:**
+1. **Clone the repository:**
    ```bash
    git clone <repository-url>
    cd "py API pj"
    ```
 
-2. **Install dependencies:**
+2. **Create and activate a virtual environment:**
+   ```bash
+   python -m venv .venv
+
+   # Windows
+   .venv\Scripts\activate
+
+   # macOS/Linux
+   source .venv/bin/activate
+   ```
+
+3. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Set up environment:**
+4. **Set up environment variables:**
    ```bash
    cp .env.example .env
-   # Edit .env with your secret key
+   # Edit .env with your values
    ```
 
-4. **Run application:**
+5. **Run the development server:**
    ```bash
    uvicorn app.main:app --reload --port 8000
    ```
 
-5. **Access API:**
-   - **API Documentation**: `http://localhost:8000/docs`
-   - **Root Endpoint**: `http://localhost:8000/`
+6. **Access the API:**
+   - Swagger UI: `http://localhost:8000/docs`
+   - Root: `http://localhost:8000/`
 
 ### Docker Setup
 
 ```bash
-# Build and run
-docker build -t text-api .
-docker run -p 8000:8000 --env-file .env text-api
+docker build -t text-processing-api .
+docker run -p 8000:8000 --env-file .env text-processing-api
 ```
 
 ## Environment Variables
@@ -126,6 +167,7 @@ SECRET_KEY=your-secret-key-here
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=15
 REFRESH_TOKEN_EXPIRE_DAYS=7
+DATABASE_URL=sqlite:///./database.db
 ```
 
 Generate a secure secret key:
@@ -133,31 +175,37 @@ Generate a secure secret key:
 openssl rand -hex 32
 ```
 
-## Short Testing Guide
+## API Endpoints
 
-### 1. Start the Application
-```bash
-uvicorn app.main:app --reload --port 8000
-```
+### Auth
 
-### 2. Test with Swagger UI
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/auth/register` | Register a new user |
+| POST | `/auth/login` | Login and receive JWT token |
+
+### Paragraphs
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/paragraphs/` | Submit one or more paragraphs |
+| GET | `/paragraphs/` | List your paragraphs (paginated) |
+| GET | `/paragraphs/search?word=xyz` | Search paragraphs by word frequency |
+
+> All `/paragraphs/` endpoints require a `Bearer` token in the `Authorization` header.
+
+## Testing Guide
+
+### With Swagger UI
+
 1. Open `http://localhost:8000/docs`
-2. **Register User:**
-   - Use `POST /auth/register`
-   - `{"email": "test@example.com", "password": "password123"}`
-3. **Login:**
-   - Use `POST /auth/login`
-   - Copy the `access_token` from response
-4. **Authorize:**
-   - Click "Authorize" button (top right)
-   - Enter: `Bearer YOUR_ACCESS_TOKEN`
-5. **Submit Paragraphs:**
-   - Use `POST /paragraphs/`
-   - `{"paragraphs": ["Python is great. Python is popular.", "I love coding."]}`
-6. **Search:**
-   - Use `GET /paragraphs/search?word=python`
+2. **Register** via `POST /auth/register` → `{"email": "test@example.com", "password": "password123"}`
+3. **Login** via `POST /auth/login` → copy the `access_token`
+4. **Authorize** → click the "Authorize" button → enter `Bearer YOUR_ACCESS_TOKEN`
+5. **Submit** via `POST /paragraphs/` → `{"paragraphs": ["Python is great. Python is popular."]}`
+6. **Search** via `GET /paragraphs/search?word=python`
 
-### 3. Test with curl
+### With curl
 
 ```bash
 # Register
@@ -181,38 +229,24 @@ curl -X GET "http://localhost:8000/paragraphs/search?word=test" \
   -H "Authorization: Bearer TOKEN"
 ```
 
-## Project Structure
+## Notes
 
-```
-Text Processing API/
-|
-|__ app/
-|   |
-|   |__ core/
-|   |   |
-|   |   |__ database.py
-|   |   |__ models.py
-|   |   |__ schemas.py
-|   |
-|   |__ routers/
-|   |   |
-|   |   |__ auth.py
-|   |   |__ paragraphs.py
-|   |
-|   |__ services/
-|   |   |
-|   |   |__ auth.py
-|   |   |__ indexing.py
-|
-|__ tests/
-|
-|__ utils/
-|   |
-|   |__ dependencies.py
-|
-|__ main.py
-|__ .env.example
-|__ requirements.txt
-|__ Dockerfile
-|__ README.md
-```
+- `database.db` is a local SQLite file for development — do not commit it (already in `.gitignore`)
+- For production, swap `DATABASE_URL` to a PostgreSQL connection string and update the engine config
+- For schema migrations in production, use **Alembic** instead of `drop_all/create_all`
+
+---
+
+## What This Project Showcases
+
+This project demonstrates production-oriented backend engineering across the full stack of concerns:
+
+- **API Design** — RESTful endpoint structure with proper HTTP semantics, status codes, and Pydantic schema validation for both requests and responses
+- **Authentication & Security** — JWT-based auth with access and refresh token separation, bcrypt password hashing, and protected route dependencies via FastAPI's `Depends()` system
+- **Database & ORM Patterns** — SQLAlchemy model design with foreign key relationships, indexed columns for query performance, and session lifecycle management with `get_db()`
+- **Async Architecture** — Decoupling slow operations (word indexing) from the request cycle using `BackgroundTasks`, so endpoints return immediately without blocking
+- **Pre-built Search Index** — Rather than scanning paragraph text at query time, word frequencies are indexed on write into a dedicated `ParagraphWordCount` table — demonstrating the write-heavy vs read-optimised design tradeoff
+- **Pagination** — Offset-based pagination with configurable `page` and `per_page` controls and a separate COUNT query for accurate totals
+- **Data Isolation** — Every query is scoped to `user_id`, ensuring users can only access their own data
+- **Containerization** — Dockerfile included for consistent, portable deployment across environments
+- **Developer Experience** — Auto-generated Swagger UI, `.env.example` for onboarding, and curl-based testing guide
