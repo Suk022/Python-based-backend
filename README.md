@@ -184,23 +184,35 @@ curl -X GET "http://localhost:8000/paragraphs/search?word=test" \
 ## Project Structure
 
 ```
-py API pj/
-├── app/
-│   ├── core/
-│   │   ├── models.py       # SQLAlchemy models
-│   │   └── schemas.py      # Pydantic schemas
-│   ├── services/
-│   │   ├── auth.py         # Authentication logic
-│   │   └── indexing.py     # Text processing
-│   ├── routers/
-│   │   ├── auth.py         # Auth endpoints
-│   │   └── paragraphs.py   # Paragraph endpoints
-│   ├── database.py         # Database connection
-│   ├── dependencies.py     # FastAPI dependencies
-│   └── main.py            # FastAPI app
-├── tests/                  # Test files
-├── .env.example           # Environment template
-├── requirements.txt       # Python dependencies
-├── Dockerfile            # Docker setup
-└── README.md             # This file
+Text Processing API/
+|
+|__ app/
+|   |
+|   |__ core/
+|   |   |
+|   |   |__ database.py
+|   |   |__ models.py
+|   |   |__ schemas.py
+|   |
+|   |__ routers/
+|   |   |
+|   |   |__ auth.py
+|   |   |__ paragraphs.py
+|   |
+|   |__ services/
+|   |   |
+|   |   |__ auth.py
+|   |   |__ indexing.py
+|
+|__ tests/
+|
+|__ utils/
+|   |
+|   |__ dependencies.py
+|
+|__ main.py
+|__ .env.example
+|__ requirements.txt
+|__ Dockerfile
+|__ README.md
 ```
