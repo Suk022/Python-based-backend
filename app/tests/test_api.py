@@ -4,8 +4,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.main import app
-from app.database import get_db, Base
-from app.config import settings
+from app.core.database import get_db, Base
 
 # Force SQLite for tests
 os.environ["USE_SQLITE"] = "true"

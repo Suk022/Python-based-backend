@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from app.database import get_db
-from app.schemas import UserRegister, UserLogin, Token
-from app.auth import (
+from app.core.database import get_db
+from app.core.schemas import UserRegister, UserLogin, Token
+from app.services.auth import (
     get_user_by_email, create_user, authenticate_user, 
     create_access_token, create_refresh_token, invalidate_refresh_token
 )
@@ -22,7 +22,7 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
     
     # Create new user
     user = create_user(db, user_data.email, user_data.password)
-    return {"message": "User registered successfully", "user_id": str(user.id)}
+    return {"message": f"User {user.email} registered successfully"}
 
 @router.post("/login", response_model=Token)
 async def login(user_data: UserLogin, db: Session = Depends(get_db)):
