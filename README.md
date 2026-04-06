@@ -233,20 +233,6 @@ curl -X GET "http://localhost:8000/paragraphs/search?word=test" \
 
 - `database.db` is a local SQLite file for development — do not commit it (already in `.gitignore`)
 - For production, swap `DATABASE_URL` to a PostgreSQL connection string and update the engine config
-- For schema migrations in production, use **Alembic** instead of `drop_all/create_all`
 
 ---
 
-## What This Project Showcases
-
-This project demonstrates production-oriented backend engineering across the full stack of concerns:
-
-- **API Design** — RESTful endpoint structure with proper HTTP semantics, status codes, and Pydantic schema validation for both requests and responses
-- **Authentication & Security** — JWT-based auth with access and refresh token separation, bcrypt password hashing, and protected route dependencies via FastAPI's `Depends()` system
-- **Database & ORM Patterns** — SQLAlchemy model design with foreign key relationships, indexed columns for query performance, and session lifecycle management with `get_db()`
-- **Async Architecture** — Decoupling slow operations (word indexing) from the request cycle using `BackgroundTasks`, so endpoints return immediately without blocking
-- **Pre-built Search Index** — Rather than scanning paragraph text at query time, word frequencies are indexed on write into a dedicated `ParagraphWordCount` table — demonstrating the write-heavy vs read-optimised design tradeoff
-- **Pagination** — Offset-based pagination with configurable `page` and `per_page` controls and a separate COUNT query for accurate totals
-- **Data Isolation** — Every query is scoped to `user_id`, ensuring users can only access their own data
-- **Containerization** — Dockerfile included for consistent, portable deployment across environments
-- **Developer Experience** — Auto-generated Swagger UI, `.env.example` for onboarding, and curl-based testing guide
